@@ -10,7 +10,7 @@ spring:
   freemarker:
     cache: false
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/dms_hloli_cn?serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/ycdms?serverTimezone=UTC
     username: ycdms
     password: silvermoonant
     type: com.alibaba.druid.pool.DruidDataSource
