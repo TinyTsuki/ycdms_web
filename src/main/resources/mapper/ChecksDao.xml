@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.antraces.dms.dao.ChecksDao">
+
+    <resultMap type="cn.antraces.dms.entity.Checks" id="ChecksMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="token" column="token" jdbcType="VARCHAR"/>
+        <result property="uid" column="uid" jdbcType="INTEGER"/>
+        <result property="creatime" column="creatime" jdbcType="BIGINT"/>
+        <result property="usetime" column="usetime" jdbcType="BIGINT"/>
+        <result property="worker" column="worker" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ChecksMap">
+        select id,
+               token,
+               uid,
+               creatime,
+               usetime,
+               worker
+        from checks
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ChecksMap">
+        select
+        id, token, uid, creatime, usetime, worker
+        from checks
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="token != null and token != ''">
+                and token = #{token}
+            </if>
+            <if test="uid != null">
+                and uid = #{uid}
+            </if>
+            <if test="creatime != null">
+                and creatime = #{creatime}
+            </if>
+            <if test="usetime != null">
+                and usetime = #{usetime}
+            </if>
+            <if test="worker != null">
+                and worker = #{worker}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from checks
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="token != null and token != ''">
+                and token = #{token}
+            </if>
+            <if test="uid != null">
+                and uid = #{uid}
+            </if>
+            <if test="creatime != null">
+                and creatime = #{creatime}
+            </if>
+            <if test="usetime != null">
+                and usetime = #{usetime}
+            </if>
+            <if test="worker != null">
+                and worker = #{worker}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into checks(token, uid, creatime, usetime, worker)
+        values (#{token}, #{uid}, #{creatime}, #{usetime}, #{worker})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into checks(token, uid, creatime, usetime, worker)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.token}, #{entity.uid}, #{entity.creatime}, #{entity.usetime}, #{entity.worker})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into checks(token, uid, creatime, usetime, worker)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.token}, #{entity.uid}, #{entity.creatime}, #{entity.usetime}, #{entity.worker})
+        </foreach>
+        on duplicate key update
+        token = values(token),
+        uid = values(uid),
+        creatime = values(creatime),
+        usetime = values(usetime),
+        worker = values(worker)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update checks
+        <set>
+            <if test="token != null and token != ''">
+                token = #{token},
+            </if>
+            <if test="uid != null">
+                uid = #{uid},
+            </if>
+            <if test="creatime != null">
+                creatime = #{creatime},
+            </if>
+            <if test="usetime != null">
+                usetime = #{usetime},
+            </if>
+            <if test="worker != null">
+                worker = #{worker},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from checks
+        where id = #{id}
+    </delete>
+
+</mapper>
+

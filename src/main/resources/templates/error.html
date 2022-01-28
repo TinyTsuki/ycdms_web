@@ -1,0 +1,52 @@
+<!doctype html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"/>
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <link rel="shortcut icon" href="../static/favicon.png">
+
+    <!-- MDUI CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/mdui@1.0.0/dist/css/mdui.min.css"
+          integrity="sha384-2PJ2u4NYg6jCNNpv3i1hK9AoAqODy6CdiC+gYiL2DVx+ku5wzJMFNdE3RoWfBIRP"
+          crossorigin="anonymous"/>
+    <style>
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
+    <title th:text="${clubInfo.clubTitle} + ' - 新生注册'"></title>
+</head>
+<body class="mdui-appbar-with-toolbar mdui-theme-accent-pink mdui-theme-primary-blue-grey mdui-theme-layout-auto">
+<div class="mdui-appbar mdui-appbar-fixed mdui-color-theme">
+    <div class="mdui-toolbar">
+        <a href="javascript:;" class="mdui-typo-headline" th:text="${clubInfo.clubTitle}"></a>
+        <a href="javascript:;" class="mdui-typo-title"> の 新生注册</a>
+        <div class="mdui-toolbar-spacer"></div>
+        <a th:href="${clubInfo.groupUrl}" target="_blank" class="mdui-btn mdui-btn-icon"
+           mdui-tooltip="{content: '加入新生群'}"><i class="mdui-icon material-icons">group_add</i></a>
+    </div>
+</div>
+<div class="mdui-container-fluid mdui-typo"
+     style="width: 100%;top:50%;text-align: center;position: absolute;margin-top: -10px">
+    <p id="info">
+        注册码错误或已被使用，如有问题请联系社团管理，新生群：
+        <a th:href="${clubInfo.groupUrl}" th:text="${clubInfo.groupNo}"></a>，
+        <span th:text="${clubInfo.adminInfo1}"></span>
+    </p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mdui@1.0.0/dist/js/mdui.min.js"
+        integrity="sha384-aB8rnkAu/GBsQ1q6dwTySnlrrbhqDwrDnpVHR2Wgm8pWLbwUnzDcIROX3VvCbaK+"
+        crossorigin="anonymous">
+</script>
+</body>
+</html>

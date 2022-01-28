@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.antraces.dms.dao.AttendancesDao">
+
+    <resultMap type="cn.antraces.dms.entity.Attendances" id="AttendancesMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="eid" column="eid" jdbcType="INTEGER"/>
+        <result property="uid" column="uid" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="AttendancesMap">
+        select id,
+               eid,
+               uid,
+               status
+        from attendances
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="AttendancesMap">
+        select
+        id, eid, uid, status
+        from attendances
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="eid != null">
+                and eid = #{eid}
+            </if>
+            <if test="uid != null">
+                and uid = #{uid}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from attendances
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="eid != null">
+                and eid = #{eid}
+            </if>
+            <if test="uid != null">
+                and uid = #{uid}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into attendances(eid, uid, status)
+        values (#{eid}, #{uid}, #{status})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into attendances(eid, uid, status)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.eid}, #{entity.uid}, #{entity.status})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into attendances(eid, uid, status)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.eid}, #{entity.uid}, #{entity.status})
+        </foreach>
+        on duplicate key update
+        eid = values(eid),
+        uid = values(uid),
+        status = values(status)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update attendances
+        <set>
+            <if test="eid != null">
+                eid = #{eid},
+            </if>
+            <if test="uid != null">
+                uid = #{uid},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from attendances
+        where id = #{id}
+    </delete>
+
+</mapper>
+

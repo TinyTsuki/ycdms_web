@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.antraces.dms.dao.WorkersDao">
+
+    <resultMap type="cn.antraces.dms.entity.Workers" id="WorkersMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="job" column="job" jdbcType="VARCHAR"/>
+        <result property="token" column="token" jdbcType="VARCHAR"/>
+        <result property="qq" column="qq" jdbcType="BIGINT"/>
+        <result property="psw" column="psw" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="WorkersMap">
+        select id,
+               name,
+               job,
+               token
+        from workers
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="WorkersMap">
+        select
+        id, name, job, token
+        from workers
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="job != null and job != ''">
+                and job = #{job}
+            </if>
+            <if test="token != null and token != ''">
+                and token = #{token}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from workers
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="job != null and job != ''">
+                and job = #{job}
+            </if>
+            <if test="token != null and token != ''">
+                and token = #{token}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into workers(name, job, token)
+        values (#{name}, #{job}, #{token})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into workers(name, job, token)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.job}, #{entity.token})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into workers(name, job, token)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.job}, #{entity.token})
+        </foreach>
+        on duplicate key update
+        name = values(name),
+        job = values(job),
+        token = values(token)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update workers
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="job != null and job != ''">
+                job = #{job},
+            </if>
+            <if test="token != null and token != ''">
+                token = #{token},
+            </if>
+            <if test="qq != null and qq != 0">
+                qq = #{qq},
+            </if>
+            <if test="psw != null and psw != ''">
+                psw = #{psw},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from workers
+        where id = #{id}
+    </delete>
+
+    <!--通过token查询qq, psw-->
+    <select id="login" resultMap="WorkersMap">
+        SELECT `id`, `qq`, `psw`
+        FROM `workers`
+        WHERE `token` = #{token}
+    </select>
+
+    <!--通过主键修改数据-->
+    <update id="updateByToken">
+        update workers
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="job != null and job != ''">
+                job = #{job},
+            </if>
+            <if test="qq != null and qq != 0">
+                qq = #{qq},
+            </if>
+            <if test="psw != null and psw != ''">
+                psw = #{psw},
+            </if>
+        </set>
+        where token = #{token}
+    </update>
+
+    <select id="getIdByToken" resultType="int">
+        SELECT `id`
+        FROM `workers`
+        WHERE `token` = #{token}
+    </select>
+
+    <select id="getWorkerInfo" resultMap="WorkersMap">
+        SELECT `id`, `job`, `qq`
+        FROM `workers`
+        WHERE `token` = #{token}
+    </select>
+
+</mapper>

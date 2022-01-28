@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta itemprop="image" content="./images/icon.png"/>
+    <link href="https://fonts.loli.net/css?family=ZCOOL+KuaiLe" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css"/>
+    <link rel="shortcut icon" href="../static/favicon.png">
+    <script type="text/javascript" src="https://lib.sinaapp.com/js/jquery/1.12.4/jquery-1.12.4.min.js"></script>
+    <meta itemprop="name" content="螢川動漫社"/>
+    <title th:text="${clubInfo.clubTitle}"></title>
+</head>
+
+<body>
+<div class="page">
+    <div class="bg"></div>
+    <div class="container ">
+        <div class="container result">
+            <h1 class="title" th:text="${clubInfo.clubTitle}"></h1>
+            <h1 class="title">编号查询</h1>
+            <div class>
+                <form class="search-form" onsubmit="return false;">
+                    <label>
+                        <input name="qq" placeholder="请输入QQ"/>
+                    </label>
+                    <h4 id="info"></h4>
+                </form>
+            </div>
+        </div>
+        <div class="div_foot" style=" text-align:center; ">
+            <span style="font-size:16px">
+                <a style=" text-decoration:none; " href="https://i.loli.link">
+                <span style="color:#ffffff">博客</span></a>&nbsp;&nbsp;
+                <img style="width:48px;height:48px;margin-bottom:-8px" src="../static/images/icon.png" alt=""/>&nbsp;&nbsp;
+                <a style=" text-decoration:none; " href="https://i.loli.link/i.html">
+                    <span style="color:#ffffff">关于</span></a>
+            </span>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    $(function () {
+        $("input[name='qq']").bind('keypress', function (event) {
+            if (event.keyCode === 13) {
+                let qq = $("input[name='qq']").val();
+                qq = qq.length === (Math.floor(qq) + "").length ? qq * 1 : 0;
+                qq = qq === Math.floor(qq) ? qq : 0;
+                let $info = $("#info");
+                if (qq >= 10000 && qq < 10000000000) {
+                    $info.text("");
+                    $.post("/api/Member/getIdByQQ", {qq}, back => {
+                        if (back.code > 0) {
+                            $info.text("喵喵：阁下的编号是『" + back.data + "』");
+                        } else {
+                            $info.text("喵喵：" + back.msg);
+                        }
+                    });
+                } else {
+                    $info.text("喵喵：请检查阁下输入的QQ号是否有误。");
+                }
+            }
+        });
+    });
+</script>
+
+</html>

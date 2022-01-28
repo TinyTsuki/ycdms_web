@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.antraces.dms.dao.MembersDao">
+
+    <resultMap type="cn.antraces.dms.entity.Members" id="MembersMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="cn" column="cn" jdbcType="VARCHAR"/>
+        <result property="series" column="series" jdbcType="VARCHAR"/>
+        <result property="major" column="major" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="BIGINT"/>
+        <result property="qq" column="qq" jdbcType="BIGINT"/>
+        <result property="tung" column="tung" jdbcType="INTEGER"/>
+        <result property="room" column="room" jdbcType="INTEGER"/>
+        <result property="photo" column="photo" jdbcType="INTEGER"/>
+        <result property="qrid" column="qrid" jdbcType="INTEGER"/>
+        <result property="department" column="department" jdbcType="INTEGER"/>
+        <result property="grade" column="grade" jdbcType="INTEGER"/>
+        <result property="sex" column="sex" jdbcType="INTEGER"/>
+        <result property="nation" column="nation" jdbcType="VARCHAR"/>
+        <result property="politics" column="politics" jdbcType="INTEGER"/>
+        <result property="classe" column="classe" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from members
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="cn != null and cn != ''">
+                and cn = #{cn}
+            </if>
+            <if test="series != null and series != ''">
+                and series = #{series}
+            </if>
+            <if test="major != null and major != ''">
+                and major = #{major}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="qq != null and qq != ''">
+                and qq = #{qq}
+            </if>
+            <if test="tung != null">
+                and tung = #{tung}
+            </if>
+            <if test="room != null">
+                and room = #{room}
+            </if>
+            <if test="photo != null">
+                and photo = #{photo}
+            </if>
+            <if test="qrid != null">
+                and qrid = #{qrid}
+            </if>
+            <if test="department != null">
+                and department = #{department}
+            </if>
+            <if test="grade != null">
+                and grade = #{grade}
+            </if>
+            <if test="sex != null">
+                and sex = #{sex}
+            </if>
+            <if test="nation != null and nation != ''">
+                and nation = #{nation}
+            </if>
+            <if test="politics != null">
+                and politics = #{politics}
+            </if>
+            <if test="classe != null">
+                and classe = #{classe}
+            </if>
+            AND `status` = 1
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into members(name, cn, series, major, phone, qq, tung, room, photo, qrid, department, grade, sex, nation,
+                            politics, classe)
+        values (#{name}, #{cn}, #{series}, #{major}, #{phone}, #{qq}, #{tung}, #{room}, #{photo}, #{qrid},
+                #{department}, #{grade}, #{sex}, #{nation}, #{politics}, #{classe})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update members
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="cn != null and cn != ''">
+                cn = #{cn},
+            </if>
+            <if test="series != null and series != ''">
+                series = #{series},
+            </if>
+            <if test="major != null and major != ''">
+                major = #{major},
+            </if>
+            <if test="phone != null and phone != 0">
+                phone = #{phone},
+            </if>
+            <if test="qq != null and qq != 0">
+                qq = #{qq},
+            </if>
+            <if test="tung != null and tung != 0">
+                tung = #{tung},
+            </if>
+            <if test="room != null and room != 0">
+                room = #{room},
+            </if>
+            <if test="photo != null and photo != 0">
+                photo = #{photo},
+            </if>
+            <if test="qrid != null and qrid != 0">
+                qrid = #{qrid},
+            </if>
+            <if test="department != null and department != 0">
+                department = #{department},
+            </if>
+            <if test="grade != null and grade != 0">
+                grade = #{grade},
+            </if>
+            <if test="sex != null and sex != 0">
+                sex = #{sex},
+            </if>
+            <if test="nation != null and nation != ''">
+                nation = #{nation},
+            </if>
+            <if test="politics != null and politics != 0">
+                politics = #{politics},
+            </if>
+            <if test="classe != null and classe != 0">
+                classe = #{classe},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <update id="deleteById">
+        UPDATE `members`
+        <set>
+            `status` = 0
+        </set>
+        WHERE `id` = #{id}
+    </update>
+
+    <!--通过QQ查询ID-->
+    <select id="getIdByQQ" resultType="int">
+        SELECT IF(AVG(`id`) IS NULL, 0, `id`) AS id
+        FROM `members`
+        WHERE `qq` = #{qq}
+          AND `status` = 1
+    </select>
+
+    <!--通过手机查询ID-->
+    <select id="getIdByPhone" resultType="int">
+        SELECT IF(AVG(`id`) IS NULL, 0, `id`) AS id
+        FROM `members`
+        WHERE `phone` = #{phone}
+          AND `status` = 1
+    </select>
+
+    <!--查询全部-->
+    <select id="queryAll" resultMap="MembersMap">
+        SELECT *
+        FROM `members`
+        WHERE `status` = 1
+    </select>
+
+    <!--通过ID/QQ/手机号查询-->
+    <select id="query" resultMap="MembersMap">
+        SELECT *
+        FROM `members`
+        <where>
+            <choose>
+                <when test="id != null and id != 0">
+                    `id` = #{id}
+                </when>
+                <when test="qq != null and qq != 0">
+                    `qq` = #{qq}
+                </when>
+                <when test="phone != null and phone != 0">
+                    `phone` = #{phone}
+                </when>
+                <when test="name != null and name != ''">
+                    `name` = #{name}
+                </when>
+                <when test="cn != null and cn != ''">
+                    `cn` = #{cn}
+                </when>
+            </choose>
+            AND `status` = 1
+        </where>
+    </select>
+
+    <!--通过部门查询-->
+    <select id="queryByDepartment" resultMap="MembersMap">
+        SELECT *
+        FROM `members`
+        WHERE `department` = #{department}
+          AND `status` = 1
+    </select>
+
+    <!--通过主键修改photo-->
+    <update id="changePhoto">
+        UPDATE `members`
+        <set>
+            `photo` = #{photo}
+        </set>
+        WHERE `id` = #{id}
+    </update>
+
+    <!--通过主键修改QQ-->
+    <update id="changeQQ">
+        UPDATE `members`
+        <set>
+            `qq` = #{qq}
+        </set>
+        WHERE `id` = #{id}
+    </update>
+</mapper>
