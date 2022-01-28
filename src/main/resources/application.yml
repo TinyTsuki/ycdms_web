@@ -1,0 +1,33 @@
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+    cache: false
+    suffix: .html
+  mvc:
+    static-path-pattern: /static/**
+  messages:
+    encoding: UTF-8
+  freemarker:
+    cache: false
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/dms_hloli_cn?serverTimezone=UTC
+    username: ycdms
+    password: silvermoonant
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 20
+      min-idle: 10
+      max-active: 100
+  web:
+    resources:
+      static-locations: classpath:/templates/,classpath:/static/
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
+  main:
+    allow-bean-definition-overriding: true
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: cn.antraces.dms.entity
+
